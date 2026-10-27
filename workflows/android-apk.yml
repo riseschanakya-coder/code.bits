@@ -1,0 +1,53 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build APK
+        env:
+          CODEDAILY_URL: ${{ vars.CODEDAILY_URL }}
+        run: |
+          if [ -z "$CODEDAILY_URL" ]; then
+            echo "Set the repository variable CODEDAILY_URL to the deployed HTTPS site URL."
+            exit 1
+          fi
+          case "$CODEDAILY_URL" in
+            https://*) ;;
+            *)
+              echo "CODEDAILY_URL must start with https://"
+              exit 1
+              ;;
+          esac
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          gradle --no-daemon :app:assembleDebug "-PcodedailyUrl=$CODEDAILY_URL"
+        working-directory: android
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: codedaily-android-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
