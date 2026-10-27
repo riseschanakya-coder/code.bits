@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Today's Question | CodeDaily{% endblock %}
+
+{% block content %}
+{% if error %}
+<section class="empty-state">
+    <h1>Today's question is not available yet</h1>
+    <p>{{ error }}</p>
+</section>
+{% else %}
+<section class="daily-summary">
+    <article>
+        <span>Current streak</span>
+        <strong><span class="js-streak-count">{{ stats.current_streak if stats else 0 }}</span> days</strong>
+    </article>
+    <article>
+        <span>Longest streak</span>
+        <strong>{{ stats.longest_streak if stats else 0 }} days</strong>
+    </article>
+    <article class="{{ 'done' if stats and stats.today_solved else 'pending' }}">
+        <span>{{ "Daily goal" if is_daily else "Practice mode" }}</span>
+        <strong class="js-today-status">{{ "Solved" if stats and stats.today_solved else ("Submit to solve" if is_daily else "Extra practice") }}</strong>
+    </article>
+</section>
+
+<section class="coding-layout"
+         data-question-id="{{ question.id }}"
+         data-is-daily="{{ 'true' if is_daily else 'false' }}"
+         data-function-signature="{{ question.function_signature or '' }}">
+    <article class="problem-panel">
+        <div class="problem-header">
+            <div>
+                <p class="eyebrow">{{ page_label or "Coding Problem" }}</p>
+                <h1>{{ question.title }}</h1>
+            </div>
+            <span class="difficulty {{ question.difficulty|lower }}">{{ question.difficulty }}</span>
+        </div>
+
+        <h2>Problem Statement</h2>
+        <p>{{ question.description }}</p>
+
+        {% if question.function_signature %}
+        <h2>Function Signature</h2>
+        <pre>{{ question.function_signature }}</pre>
+        {% endif %}
+
+        <h2>Example</h2>
+        <pre>Input:
+{{ question.example_input }}
+
+Output:
+{{ question.example_output }}</pre>
+
+        {% if question.constraints %}
+        <h2>Constraints</h2>
+        <ul>
+            {% for constraint in question.constraints %}
+            <li>{{ constraint }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <div class="beginner-note">
+            <strong>Beginner tip</strong>
+            <p>Write the function with the exact name shown above. Click Run for the sample, then Submit to check the hidden test and update your streak.</p>
+        </div>
+    </article>
+
+    <article class="editor-panel">
+        <div class="editor-toolbar">
+            <div>
+                <p class="eyebrow">Code editor</p>
+                <h2>Solution</h2>
+            </div>
+            <select id="language" aria-label="Language">
+                <option value="python">Python</option>
+                <option value="c">C</option>
+                <option value="cpp">C++</option>
+                <option value="java">Java</option>
+            </select>
+        </div>
+
+        <textarea id="source-code" class="code-editor" spellcheck="false">print("Write your solution here")</textarea>
+
+        <div class="editor-actions">
+            <button id="run-btn" class="secondary-btn" type="button">Run</button>
+            <button id="submit-btn" class="primary-btn" type="button">Submit</button>
+        </div>
+
+        <div class="result-box" id="result-box">
+            <div class="result-meta">
+                <strong>Output</strong>
+                <span id="verdict">Ready</span>
+            </div>
+            <pre id="output">Run your code against the sample input.</pre>
+        </div>
+    </article>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+{% endblock %}

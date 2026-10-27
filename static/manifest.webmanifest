@@ -1,0 +1,25 @@
+{
+  "id": "/",
+  "name": "CodeDaily",
+  "short_name": "CodeDaily",
+  "description": "Build your coding skills one question at a time.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f7fb",
+  "theme_color": "#168a4a",
+  "icons": [
+    {
+      "src": "/static/icons/codedaily-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/codedaily-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

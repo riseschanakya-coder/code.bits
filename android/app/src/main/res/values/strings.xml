@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CodeDaily</string>
+    <string name="retry">Try again</string>
+    <string name="connection_error">Could not connect to CodeDaily. Check your internet connection and try again.</string>
+</resources>

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | CodeDaily{% endblock %}
+
+{% block content %}
+<section class="dashboard-hero">
+    <div>
+        <p class="eyebrow">Daily practice</p>
+        <h1>Welcome, {{ current_user.fullname.split()[0] }}</h1>
+        <p class="muted">Build momentum one problem at a time. Your next step is ready when you are.</p>
+        <a class="dashboard-cta" href="{{ url_for('daily_question') }}">
+            <span>{{ "Review today's challenge" if stats.today_solved else "Start today's challenge" }}</span>
+            <span class="dashboard-cta-arrow" aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="dashboard-goal {{ 'done' if stats.today_solved else 'pending' }}">
+        <span class="goal-icon" aria-hidden="true">{{ "✓" if stats.today_solved else "01" }}</span>
+        <div>
+            <span class="goal-label">Today's goal</span>
+            <strong>{{ "Completed" if stats.today_solved else "One problem" }}</strong>
+            <small>{{ "Great work — keep your momentum going." if stats.today_solved else "Solve the daily question to build your streak." }}</small>
+        </div>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card streak-stat">
+        <span>Current streak</span>
+        <strong>{{ stats.current_streak }} <small>days</small></strong>
+        <div class="stat-footnote">Keep showing up every day</div>
+    </article>
+    <article class="stat-card">
+        <span>Questions solved</span>
+        <strong>{{ stats.questions_solved }}</strong>
+        <div class="stat-footnote">Accepted solutions</div>
+    </article>
+    <article class="stat-card accuracy-stat">
+        <div>
+            <span>Accuracy</span>
+            <strong>{{ stats.accuracy }}%</strong>
+            <div class="stat-footnote">Accepted submissions</div>
+        </div>
+        <div class="accuracy-ring" style="--accuracy: {{ stats.accuracy }}%" role="img" aria-label="Accuracy: {{ stats.accuracy }} percent">
+            <span>{{ stats.accuracy }}%</span>
+        </div>
+    </article>
+    <article class="stat-card">
+        <span>Total submissions</span>
+        <strong>{{ stats.total_submissions }}</strong>
+        <div class="stat-footnote">Every attempt counts</div>
+    </article>
+</section>
+
+<section class="quick-actions">
+    <a class="action-card primary" href="{{ url_for('daily_question') }}">
+        <span>Solve Today's Question</span>
+        <strong>Open challenge <span class="action-arrow" aria-hidden="true"></span></strong>
+    </a>
+    <a class="action-card" href="{{ url_for('problems') }}">
+        <span>Practice Problems</span>
+        <strong>Browse library <span class="action-arrow" aria-hidden="true"></span></strong>
+    </a>
+    <a class="action-card" href="{{ url_for('profile') }}">
+        <span>View Profile</span>
+        <strong>Track progress <span class="action-arrow" aria-hidden="true"></span></strong>
+    </a>
+</section>
+{% endblock %}

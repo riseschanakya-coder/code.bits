@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Problems | CodeDaily{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Practice library</p>
+        <h1>Problems</h1>
+    </div>
+    <input id="problem-search" class="search-input" type="search" placeholder="Search by title or difficulty">
+</section>
+
+<div class="filter-tabs" role="tablist">
+    <button class="active" type="button" data-filter="all">All</button>
+    <button type="button" data-filter="easy">Easy</button>
+    <button type="button" data-filter="medium">Medium</button>
+    <button type="button" data-filter="hard">Hard</button>
+</div>
+
+<p id="problem-empty" class="empty-state compact" hidden>No matching problems found.</p>
+
+<section class="section-block">
+    <div class="section-title">
+        <p class="eyebrow">Curated set</p>
+        <h2>Practice library</h2>
+    </div>
+    <div class="problem-list">
+        {% for question in library %}
+        <article class="problem-row" data-search="{{ (question.title ~ ' ' ~ question.difficulty)|lower }}" data-difficulty="{{ question.difficulty|lower }}">
+            <div>
+                <h2>{{ question.title }}</h2>
+                <span class="difficulty {{ question.difficulty|lower }}">{{ question.difficulty }}</span>
+            </div>
+            <div class="problem-row-actions">
+                <span class="status-pill {{ 'solved' if question.id in solved_ids else '' }}">
+                    {{ "Solved" if question.id in solved_ids else "Not solved" }}
+                </span>
+                <a class="open-btn" href="{{ url_for('practice_question', question_id=question.id) }}">Open</a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section-block">
+    <div class="section-title">
+        <p class="eyebrow">Daily archive</p>
+        <h2>Past daily questions</h2>
+    </div>
+    <div class="problem-list">
+        {% for question in questions %}
+        <article class="problem-row" data-search="{{ (question.title ~ ' ' ~ question.difficulty ~ ' ' ~ question.question_date)|lower }}" data-difficulty="{{ question.difficulty|lower }}">
+            <div>
+                <h2>{{ question.title }}</h2>
+                <span class="difficulty {{ question.difficulty|lower }}">{{ question.difficulty }}</span>
+                <span class="archive-date">{{ question.question_date }}</span>
+            </div>
+            <div class="problem-row-actions">
+                <span class="status-pill {{ 'solved' if question.id in solved_ids else '' }}">
+                    {{ "Solved" if question.id in solved_ids else "Not solved" }}
+                </span>
+                <a class="open-btn" href="{{ url_for('practice_question', question_id=question.id) }}">Open</a>
+            </div>
+        </article>
+        {% else %}
+        <article class="empty-state compact">
+            <h2>No archived daily questions yet</h2>
+            <p>Open Today's Question to generate the first AI-powered daily challenge.</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

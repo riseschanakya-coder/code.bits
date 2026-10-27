@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Profile | CodeDaily{% endblock %}
+
+{% block content %}
+<section class="profile-grid">
+    <article class="profile-card">
+        <div class="avatar">{{ user.fullname[0]|upper }}</div>
+        <h1>{{ user.fullname }}</h1>
+        <p>{{ user.email }}</p>
+        <span>Joined {{ user.joined_at[:10] }}</span>
+    </article>
+
+    <article class="profile-stats">
+        <div><span>Current streak</span><strong>{{ stats.current_streak }}</strong></div>
+        <div><span>Longest streak</span><strong>{{ stats.longest_streak }}</strong></div>
+        <div><span>Questions solved</span><strong>{{ stats.questions_solved }}</strong></div>
+        <div><span>Global rank</span><strong>#{{ stats.global_rank }}</strong></div>
+        <div><span>Total submissions</span><strong>{{ stats.total_submissions }}</strong></div>
+        <div><span>Acceptance rate</span><strong>{{ stats.accuracy }}%</strong></div>
+    </article>
+</section>
+
+<section class="difficulty-breakdown">
+    <article><span>Easy solved</span><strong>{{ stats.easy_solved }}</strong></article>
+    <article><span>Medium solved</span><strong>{{ stats.medium_solved }}</strong></article>
+    <article><span>Hard solved</span><strong>{{ stats.hard_solved }}</strong></article>
+</section>
+
+<section class="activity-panel">
+    <div class="section-title">
+        <p class="eyebrow">Recent activity</p>
+        <h2>Submissions</h2>
+    </div>
+    {% if stats.recent_activity %}
+        {% for item in stats.recent_activity %}
+        <div class="activity-row">
+            <div>
+                <strong>{{ item.title }}</strong>
+                <span>{{ item.language|upper }} | {{ item.submitted_at }}</span>
+            </div>
+            <span class="status-pill {{ 'solved' if item.verdict == 'Accepted' else '' }}">{{ item.verdict }}</span>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="muted">No submissions yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

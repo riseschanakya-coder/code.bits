@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CodeDaily{% endblock %}</title>
+    <meta name="theme-color" content="#168a4a">
+    <meta name="application-name" content="CodeDaily">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="CodeDaily">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icons/codedaily.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/codedaily-192.png') }}">
+    <script>
+        const savedTheme = localStorage.getItem("codedaily-theme") || "light";
+        document.documentElement.dataset.theme = savedTheme;
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <div class="page-loader" aria-hidden="true"></div>
+    {% if current_user %}
+    <div class="app-frame">
+        <nav class="navbar" aria-label="Main navigation">
+            <a class="brand" href="{{ url_for('dashboard') }}">CodeDaily</a>
+            <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" type="button">Menu</button>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}" {% if request.endpoint == 'dashboard' %}aria-current="page"{% endif %}>Dashboard</a>
+                <a href="{{ url_for('daily_question') }}" {% if request.endpoint in ['daily_question', 'practice_question'] %}aria-current="page"{% endif %}>Today's Question</a>
+                <a href="{{ url_for('problems') }}" {% if request.endpoint == 'problems' %}aria-current="page"{% endif %}>Problems</a>
+                <a href="{{ url_for('profile') }}" {% if request.endpoint == 'profile' %}aria-current="page"{% endif %}>Profile</a>
+                <span class="nav-streak" title="Current daily streak">
+                    <span>Streak</span> <strong class="js-streak-count">{{ current_stats.current_streak if current_stats else 0 }}</strong>
+                </span>
+                <label class="theme-picker">
+                    <span>Theme</span>
+                    <select id="theme-select" aria-label="Theme">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="focus">Focus</option>
+                    </select>
+                </label>
+                <button class="install-app-button" id="install-app" type="button" hidden>Install app</button>
+                <a class="logout-link" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </nav>
+    {% endif %}
+    <main class="page-shell{% if not current_user %} auth-shell{% endif %}">
+        {% block content %}{% endblock %}
+    </main>
+    {% if current_user %}</div>{% endif %}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
