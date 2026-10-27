@@ -27,6 +27,8 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: "platform-tools platforms;android-35 build-tools;35.0.0"
 
       - name: Build APK
         env:
@@ -43,7 +45,6 @@ jobs:
               exit 1
               ;;
           esac
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
           gradle --no-daemon :app:assembleDebug "-PcodedailyUrl=$CODEDAILY_URL"
         working-directory: android
 
